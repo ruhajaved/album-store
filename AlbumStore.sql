@@ -15,3 +15,6 @@ VALUES
     ('The Cellist of Sarajevo', 'Steven Galloway', 32.99),
     ('Crime and Punishment', 'Fyodor Dostoevsky', 35.00),
     ('The Pet Sematary', 'Stephen King', 29.99);
+
+CREATE USER myuser WITH PASSWORD 'pass';
+GRANT SELECT, INSERT, UPDATE, DELETE ON albums TO myuser;
