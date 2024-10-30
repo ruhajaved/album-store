@@ -25,6 +25,20 @@ var albums = []album{
 
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
+	rows, err := db.Query("SELECT * FROM albums;")
+	CheckError(err)
+
+	defer rows.Close()
+	for rows.Next() {
+		var albums album
+		err := rows.Scan(&title)
+		CheckError(err)
+		fmt.Println(title)
+	}
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
