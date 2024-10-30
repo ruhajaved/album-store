@@ -3,6 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"database/sql"
+	_ "github.com/lib/pq"
+	"log"
 )
 
 // album represents data about a record album.
@@ -37,10 +40,27 @@ func postAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newAlbum)
 }
 
+func CheckError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
+	connStr := "postgresql://postgres@localhost/album_store?sslmode=disable"
+	// Connect to database
+	db, err := sql.Open("postgres", connStr)
+	CheckError(err)
+
+	// close database at the end
+	defer db.Close()
+
+	// check db
+	err = db.Ping()
+	CheckError(err)
+	
 	router := gin.Default()
 	router.GET("/albums", getAlbums)
 	router.POST("/albums", postAlbums)
-
 	router.Run("localhost:8080")
 }
